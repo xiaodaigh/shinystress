@@ -25,3 +25,5 @@ vignettes/*.pdf
 .Rproj.user
 DT100.fst
 shinystress.Rproj
+
+simulation\.fst
