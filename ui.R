@@ -1,8 +1,5 @@
-
-
 library(shiny)
 library(shinydashboard)
-
 
 dashboardPage(
   skin = "red",
