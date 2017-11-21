@@ -112,9 +112,9 @@ shinyServer(function(input, output, session) {
     
       
       indata %T>% 
-        {incProgress(0/3, detail = paste("Simulating period ", 1))} %>% simulate_one_period(1, orig_data1, macro_tbl1, tran_tbl1) %>% {lossesdata[[1]] <<- .$new_losses; outdata[[1]] <<- .$indata; .$indata} %T>% 
-        {incProgress(1/3, detail = paste("Simulating period ", 2))} %>% simulate_one_period(2, orig_data1, macro_tbl1, tran_tbl1) %>% {lossesdata[[2]] <<- .$new_losses; outdata[[2]] <<- .$indata; .$indata} %T>% 
-        {incProgress(2/3, detail = paste("Simulating period ", 3))} %>% simulate_one_period(3, orig_data1, macro_tbl1, tran_tbl1) %>% {lossesdata[[3]] <<- .$new_losses; outdata[[3]] <<- .$indata; .$indata} 
+        {incProgress(0/3, detail = paste("Simulating period ", 1))} %>% simulate_one_period(1, orig_data1, as.numeric(input$ti_orig_dollar)*1000000, macro_tbl1, tran_tbl1) %>% {lossesdata[[1]] <<- .$new_losses; outdata[[1]] <<- .$indata; .$indata} %T>% 
+        {incProgress(1/3, detail = paste("Simulating period ", 2))} %>% simulate_one_period(2, orig_data1, as.numeric(input$ti_orig_dollar)*1000000, macro_tbl1, tran_tbl1) %>% {lossesdata[[2]] <<- .$new_losses; outdata[[2]] <<- .$indata; .$indata} %T>% 
+        {incProgress(2/3, detail = paste("Simulating period ", 3))} %>% simulate_one_period(3, orig_data1, as.numeric(input$ti_orig_dollar)*1000000, macro_tbl1, tran_tbl1) %>% {lossesdata[[3]] <<- .$new_losses; outdata[[3]] <<- .$indata; .$indata} 
 
     
       incProgress(5/6, detail = paste("Saving results"))
@@ -145,7 +145,10 @@ shinyServer(function(input, output, session) {
   
   loss_summary_tbl <- reactive({
     gsl = granular_simulation_losses()
-    gsl[, .(curr_bal = sum(curr_bal), avg_lvr = mean(curr_lvr), avg_value = mean(value), losses = sum(pmax(0, curr_bal - value))), period_id]
+    gso = granular_simulation_out()
+    
+    outs_bal = gso[,.(curr_bal = sum(curr_bal)), period_id]
+    merge(outs_bal, gsl[, .(losses = sum(pmax(0, curr_bal - value))), period_id], by="period_id")
   })
    
   output$lossesPlot <- renderPlot({
@@ -164,7 +167,8 @@ shinyServer(function(input, output, session) {
     lst <- copy(loss_summary_tbl())
     lst[,`Cumul Losses $m` := round(cumsum(losses/1000000))]
     lst[,`Losses $m` := round(losses/1000000)][, losses:=NULL][,avg_value:=NULL]
-    lst[,`Exposure at Default`:= round(curr_bal/1000000)][,curr_bal:=NULL][,avg_lvr:=NULL]
+    lst[,`Portfolio Size $b`:= round(curr_bal/1000000000,0)][,avg_lvr:=NULL][, curr_bal:=NULL]
+    lst[,.(`Portfolio Size $b`, `Losses $m`, `Cumul Losses $m`)]
   })
   
   observe({

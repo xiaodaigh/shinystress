@@ -79,10 +79,11 @@ dashboardPage(
               l = nchar(indatafile)
               substr(indatafile, 1, l-4)
             }, USE.NAMES = F)),
-            shiny::selectizeInput("si_orig_popn", "Origin Population", choices = sapply(dir("orig"), function(indatafile) {
+            shiny::selectizeInput("si_orig_popn", "Origination Population", choices = sapply(dir("orig"), function(indatafile) {
               l = nchar(indatafile)
               substr(indatafile, 1, l-4)
             }, USE.NAMES = F)),
+            shiny::textInput("ti_orig_dollar", "Orig. Size ($m) per period", value = (2e11 - 8e10)/1000000),
             shiny::selectizeInput("si_macro_tbl", "Macro Forecasts", choices = sapply(dir("macro_tbl"), function(indatafile) {
               l = nchar(indatafile)
               substr(indatafile, 1, l-4)
@@ -90,7 +91,8 @@ dashboardPage(
             shiny::selectizeInput("si_tran_tbl", "PD Grade Transition Table", choices = sapply(dir("tran_tbl"), function(indatafile) {
               l = nchar(indatafile)
               substr(indatafile, 1, l-4)
-            }, USE.NAMES = F))
+            }, USE.NAMES = F)),
+            shiny::sliderInput("si_workout_length", "Workout period length", 2, min = 1, max = 5)
           ),
           # box(
           #   title = "Macro-economics",

@@ -83,4 +83,4 @@ sample_from_data[,.N, lvr_bin][,.(lvr_bin, dn = N/sum(N))]
 
 sample_from_data[,dplyr::n_distinct(account_id)]
 
-fst::write.fst(sample_from_data, "hypothetical.fst", 100)
+fst::write.fst(sample_from_data, "indata/synthetic.fst", 100)

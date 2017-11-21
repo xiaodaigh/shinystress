@@ -41,14 +41,14 @@ originate_new_loans <- function(indata, target_dollar, sim_period_id) {
   }
 }
 
-simulate_one_period <- function(indata, sim_period_id, origdata, macros_table, transition_table) {
+simulate_one_period <- function(indata, sim_period_id, origdata, target_dollar, macros_table, transition_table) {
   #browser()
   indata2 <- indata %>% 
     default_transition %>% 
     churn_transition(0.1) %>% 
     {.[,risk_grade := apply_transition(risk_grade, transition_table)]} %>% 
     update_valuation(sim_period_id, macros_table) %>% 
-    {rbindlist(list(., originate_new_loans(origdata, 2e11 - 8e10, sim_period_id)), use.names = T, fill = T)}
+    {rbindlist(list(., originate_new_loans(origdata, target_dollar, sim_period_id)), use.names = T, fill = T)}
   
   # this is used to indicate the latest
   indata2[,period_id := rep(sim_period_id,.N)]
