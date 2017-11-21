@@ -24,13 +24,15 @@ gen_datatable_synthetic <- function(N=2e6) {
 
 set.seed(1)
 system.time(indata <- gen_datatable_synthetic())
+system.time(WA_only <- indata[state == "WA",])
+fst::write.fst(WA_only,"indata/WA_only.fst")
 k = log(90/100/100)/log(indata[,mean(risk_grade_pd)])
 
 indata[,risk_grade_pd := exp(k*log(risk_grade_pd))]
 
-orig_normal <- indata[risk_grade <= 10,][sample(1:.N,.N/5),]
+orig_normal <- indata[sample(1:.N,.N/5),]
 write.fst(orig_normal,"orig/orig_normal.fst", 100)
-orig_80lvr <- indata[risk_grade <= 10 & curr_lvr <= 0.8,][sample(1:.N,.N/5),]
+orig_80lvr <- indata[curr_lvr <= 0.8,][sample(1:.N,.N/5),]
 write.fst(orig_80lvr,"orig/orig_80lvr.fst", 100)
 
 

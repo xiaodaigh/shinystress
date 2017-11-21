@@ -8,9 +8,11 @@ dashboardPage(
                   ),
   dashboardSidebar(
     sidebarMenu(
-      menuItem("Dashboard", tabName = "dashboard", icon = icon("dashboard")),
+      # menuItem("Dashboard", tabName = "dashboard", icon = icon("dashboard")),
       menuItem("Simulation", tabName = "simulation", icon = icon("microchip")),
-      menuItem("Pivot", tabName = "pivot", icon = icon("cube")),
+      menuItem("Probability of Default Model", tabName = "pd_tab", icon = icon("low-vision")),
+      menuItem("Losses Pivot", tabName = "pivot", icon = icon("cube")),
+      menuItem("Data Profile", tabName = "data_prof", icon = icon("area-chart")),
       menuItem("Settings", tabName = "widgets", icon = icon("th"))
     )
   ),
@@ -29,6 +31,42 @@ dashboardPage(
             title = "PD Segment distribution",
             status = "primary",
             solidHeader = T)
+        )
+      ),
+      tabItem(tabName="pd_tab"
+        ,fluidRow(
+          box(
+            title = "Controls",
+            status = "primary",
+            solidHeader = T,
+            shiny::selectizeInput("si_macro_tbl2", "Macro Forecasts", choices = sapply(dir("macro_tbl"), function(indatafile) {
+              l = nchar(indatafile)
+              substr(indatafile, 1, l-4)
+            }, USE.NAMES = F))
+            ,shiny::selectizeInput("si_tran_tbl2", "PD Grade Transition Table", choices = sapply(dir("tran_tbl"), function(indatafile) {
+              l = nchar(indatafile)
+              substr(indatafile, 1, l-4)
+            }, USE.NAMES = F))
+          ),box(
+            title = "Macros",
+            status = "primary",
+            solidHeader = T,
+            shiny::dataTableOutput("tbl_macros2")
+          )
+        )
+        ,fluidRow(
+          box(
+            title = "PD Grade Transition",
+            status = "primary",
+            solidHeader = T,
+            shiny::plotOutput("plot_pd_grade_tran")
+          ),
+          box(
+            title = "Probability of default",
+            status = "primary",
+            solidHeader = T,
+            shiny::dataTableOutput("tbl_pds")
+          )
         )
       ),
       tabItem(tabName = "simulation",
@@ -54,6 +92,12 @@ dashboardPage(
               substr(indatafile, 1, l-4)
             }, USE.NAMES = F))
           ),
+          # box(
+          #   title = "Macro-economics",
+          #   status = "info",
+          #   solidHeader = T,
+          #   shiny::dataTableOutput("tbl_macros")
+          # )
           box(
             title = "Losses Plot",
             status = "warning",
@@ -66,8 +110,7 @@ dashboardPage(
             title = "Losses Table",
             status = "warning",
             solidHeader = T,
-            shiny::dataTableOutput("lossestbl"),
-            width = 12
+            shiny::dataTableOutput("lossestbl")
           )
         )
       ),
@@ -85,6 +128,37 @@ dashboardPage(
             shiny::dataTableOutput("pivot_tbl")
           )
         )
+      ),
+      tabItem(tabName = "data_prof",
+              h2("Data Profiles"),
+              fluidRow(
+                box(
+                  title = "Variable",
+                  status = "primary",
+                  solidHeader = T,
+                  shiny::selectizeInput("si_variables", "Input Variables", choices = "")
+                ),
+                box(
+                  title = "Summary",
+                  status = "info",
+                  solidHeader = T,
+                  shiny::dataTableOutput("dt_summ_var")
+                )
+              ),
+              fluidRow(
+                box(
+                  title = "Frequency",
+                  status = "info",
+                  solidHeader = T,
+                  shiny::dataTableOutput("dt_freq")
+                ),
+                box(
+                  title = "Distribution",
+                  status = "info",
+                  solidHeader = T,
+                  shiny::plotOutput("plot_dn")
+                )
+              )
       ),
       # Second tab content
       tabItem(tabName = "widgets",
