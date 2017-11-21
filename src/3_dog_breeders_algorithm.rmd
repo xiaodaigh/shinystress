@@ -1,0 +1,16 @@
+---
+title: "Synthetic data generation - dog breeder's algorithm"
+output: html_notebook
+---
+
+
+```{r}
+indata <- fst::read.fst("indata//normal.fst",as.data.table = T)
+
+# Your Data natural follows some distribution
+indata[order(risk_grade),.N,risk_grade][,.(risk_grade, dn = N/sum(N))]
+indata[,lvr_bin := cut(curr_lvr, c(0,0.8, 1))]
+indata[order(lvr_bin),.N,lvr_bin][,.(lvr_bin, dn = N/sum(N))]
+indata[order(state),.N,state][,.(state, dn = N/sum(N))]
+
+```
