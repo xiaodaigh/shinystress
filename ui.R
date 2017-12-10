@@ -3,7 +3,7 @@ library(shinydashboard)
 
 dashboardPage(
   skin = "red",
-  dashboardHeader(title = "ShinyStress dashboard",
+  dashboardHeader(title = "ShinyStress Dashboard",
                   dropdownMenu(type = "notifications")
                   ),
   dashboardSidebar(
