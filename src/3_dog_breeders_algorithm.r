@@ -11,8 +11,8 @@ indata[order(state),.N,state][,.(state, dn = N/sum(N))]
 # might perform
 
 # e.g. VIC population grows so both NSW and VIC has 36% of portflio
-# and risk_grade 10+ collectively has 10% of distribution
-# and 50% of loans have LVR greater than 80%
+# and risk_grade 10+ collectively has 5% of distribution
+# and 30% of loans have LVR greater than 80%
 
 # use dog breeder algorithms
 # generate separate datasets that satisfies one of the criteria above
@@ -78,7 +78,7 @@ sample_from_data[,.N, vic_nsw_other][,.(vic_nsw_other, dn = N/sum(N))]
 indata[,.N, risk_grade10][,.(risk_grade10, dn = N/sum(N))]
 sample_from_data[,.N, risk_grade10][,.(risk_grade10, dn = N/sum(N))]
 
-indata[,.N, risk_grade10][,.(risk_grade10, dn = N/sum(N))]
+indata[,.N, lvr_bin][,.(lvr_bin, dn = N/sum(N))]
 sample_from_data[,.N, lvr_bin][,.(lvr_bin, dn = N/sum(N))]
 
 sample_from_data[,dplyr::n_distinct(account_id)]

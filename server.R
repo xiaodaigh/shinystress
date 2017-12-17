@@ -217,4 +217,13 @@ shinyServer(function(input, output, session) {
       write.csv(losses_pivot_tbl(), con)
     }
   )
+  
+  output$btn_dl_full_result <- downloadHandler(
+    filename = function() {
+      'losses.csv'
+    },
+    content = function(con) {
+      write.csv(simulation_results(), con)
+    }
+  )
 })

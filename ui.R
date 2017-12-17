@@ -121,7 +121,8 @@ dashboardPage(
           box(
             selectizeInput("si_pivot_by","Pivot By", choices = "", multiple=T),
             actionButton("btn_pivot_by","Pivot By"),
-            downloadButton("btn_dl_pivot_by", label = "Download Table", class = NULL)
+            downloadButton("btn_dl_pivot_by", label = "Download Table", class = NULL),
+            downloadButton("btn_dl_full_result", label = "Download Full Result", class = NULL)
           ),
           box(
             title = "Losses Pivot",

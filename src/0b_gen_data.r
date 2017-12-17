@@ -24,6 +24,7 @@ gen_datatable_synthetic <- function(N=2e6) {
 
 set.seed(1)
 system.time(indata <- gen_datatable_synthetic())
+indata[,lvr_band := cut(curr_lvr,c(-Inf, 0.4 ,0.6,0.8,0.9,0.95, Inf))]
 system.time(WA_only <- indata[state == "WA",])
 fst::write.fst(WA_only,"indata/WA_only.fst")
 k = log(90/100/100)/log(indata[,mean(risk_grade_pd)])
